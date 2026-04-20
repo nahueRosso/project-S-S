@@ -1,0 +1,320 @@
+GUIA PARA TRABAJAR CON EL REPOSITORIO RIR API
+==============================================
+
+Esta guia explica como descargar el proyecto, ejecutarlo y trabajar con ramas sin romper la rama principal.
+
+IMPORTANTE
+----------
+- No trabajar directamente sobre la rama main.
+- Cada tarea se hace en una rama nueva.
+- Cuando terminan, suben la rama y crean un Pull Request en GitHub.
+- Si no entienden algo, pregunten antes de hacer cambios grandes.
+
+
+1. PROGRAMAS NECESARIOS
+-----------------------
+
+    Instalar estos programas:
+
+    1. Python 3.11 o superior
+       Descargar desde: https://www.python.org/downloads/
+
+       Durante la instalacion, marcar la opcion:
+       Add Python to PATH
+
+    2. Git
+       Descargar desde: https://git-scm.com/downloads
+
+    3. Visual Studio Code
+       Descargar desde: https://code.visualstudio.com/
+
+
+2. DESCARGAR EL PROYECTO
+------------------------
+
+con PowerShell
+
+Abrir PowerShell en la carpeta donde quieran guardar el proyecto y ejecutar:
+
+    git clone URL_DEL_REPOSITORIO
+    cd rir-api
+
+Reemplazar URL_DEL_REPOSITORIO por la URL real del repo de GitHub.
+
+Ejemplo:
+
+    git clone https://github.com/usuario/rir-api.git
+    cd rir-api
+
+
+
+3. CREAR EL ENTORNO VIRTUAL
+---------------------------
+
+Dentro de la carpeta del proyecto, abrir PowerShell y ejecutar:
+
+    py -m venv .venv
+
+Activar el entorno virtual:
+
+    .\.venv\Scripts\Activate.ps1
+
+Si PowerShell muestra un error de permisos al activar el entorno, ejecutar una sola vez:
+
+    Set-ExecutionPolicy -ExecutionPolicy RemoteSigned -Scope CurrentUser
+
+Despues volver a activar:
+
+    .\.venv\Scripts\Activate.ps1
+
+Cuando el entorno esta activo, la terminal muestra algo como:
+
+    (.venv) PS C:\...\rir-api>
+
+
+4. INSTALAR DEPENDENCIAS
+------------------------
+
+Con el entorno virtual activado, ejecutar:
+
+    python -m pip install --upgrade pip
+    python -m pip install -e ".[dev]"
+
+Esto instala FastAPI, pytest, ruff y el resto de dependencias del proyecto.
+
+
+5. EJECUTAR LA API
+------------------
+
+Con el entorno virtual activado:
+
+    uvicorn app.main:app --reload
+
+Despues abrir en el navegador:
+
+    http://127.0.0.1:8000
+
+Documentacion interactiva de la API:
+
+    http://127.0.0.1:8000/docs
+
+Endpoint de salud(es para ver que onda el projecto): 
+
+    http://127.0.0.1:8000/health
+
+Para detener el servidor, presionar:
+
+    Ctrl + C
+
+
+6. EJECUTAR TESTS
+-----------------
+
+Con el entorno virtual activado:
+
+    pytest
+
+Si los tests pasan, deberia aparecer algo parecido a:
+
+    passed
+
+
+7. COMO TRABAJAR CON RAMAS
+--------------------------
+
+Regla principal:
+
+    NO trabajar directo en main.
+
+Antes de empezar una tarea, actualizar main:
+
+    git checkout main
+    git pull
+
+Crear una rama nueva para la tarea:
+
+    git checkout -b feature/nombre-de-la-tarea
+
+Ejemplos de nombres de ramas:
+
+    feature/generacion-senales
+    feature/procesamiento-audio
+    feature/analisis-acustico
+    docs/diagrama-arquitectura
+    docs/readme-integrantes
+    fix/test-health
+
+Despues de crear la rama, trabajar normalmente en VS Code.
+
+
+8. GUARDAR CAMBIOS CON COMMIT
+-----------------------------
+
+Ver que archivos cambiaron:
+
+    git status
+
+Agregar los cambios:
+
+    git add .
+
+Crear el commit:
+
+    git commit -m "docs: add architecture diagram"
+
+Ejemplos de mensajes de commit:
+
+    docs: add group members
+    docs: update installation instructions
+    feat: add health endpoint
+    feat: add signal generation service
+    test: add api smoke tests
+    fix: correct import error
+    chore: update dependencies
+
+Convencion recomendada:
+
+    feat:     nueva funcionalidad
+    fix:      correccion de error
+    docs:     cambios en documentacion
+    test:     tests
+    chore:    configuracion o mantenimiento
+    refactor: cambio interno sin cambiar comportamiento
+
+
+9. SUBIR LA RAMA A GITHUB
+-------------------------
+
+La primera vez que suben una rama nueva:
+
+    git push -u origin nombre-de-la-rama
+
+Ejemplo:
+
+    git push -u origin docs/diagrama-arquitectura
+
+Despues de eso, si hacen mas commits en la misma rama, alcanza con:
+
+    git push
+
+
+10. CREAR UN PULL REQUEST
+-------------------------
+
+Despues de subir la rama:
+
+1. Entrar al repositorio en GitHub.
+2. GitHub normalmente muestra un boton: Compare & pull request.
+3. Hacer click.
+4. Revisar que diga:
+
+       base: main
+       compare: nombre-de-la-rama
+
+5. Escribir una descripcion breve de lo que hicieron.
+6. Crear el Pull Request.
+7. Avisar al grupo para que alguien revise.
+
+No hacer merge si no estan seguros.
+
+
+11. FLUJO COMPLETO DE TRABAJO
+-----------------------------
+
+Cada vez que van a empezar una tarea nueva:
+
+    git checkout main
+    git pull
+    git checkout -b feature/nombre-de-la-tarea
+
+Trabajan en VS Code.
+
+Despues:
+
+    git status
+    git add .
+    git commit -m "tipo: descripcion corta"
+    git push -u origin feature/nombre-de-la-tarea
+
+Luego crean el Pull Request en GitHub.
+
+
+12. SI USAN GITHUB DESKTOP
+--------------------------
+
+Flujo recomendado:
+
+1. Abrir GitHub Desktop.
+2. Seleccionar el repositorio.
+3. Asegurarse de estar en main.
+4. Hacer Fetch origin.
+5. Hacer Pull origin si aparece disponible.
+6. Ir a Current branch > New branch.
+7. Crear una rama con nombre claro.
+8. Abrir el proyecto en VS Code.
+9. Modificar archivos.
+10. Volver a GitHub Desktop.
+11. Escribir mensaje de commit.
+12. Click en Commit to nombre-de-la-rama.
+13. Click en Push origin.
+14. Click en Create Pull Request.
+
+GitHub Desktop evita usar muchos comandos, pero la idea es la misma:
+
+    main no se toca directamente.
+    cada tarea va en una rama.
+    los cambios entran por Pull Request.
+
+
+13. REGLAS DEL GRUPO
+--------------------
+
+- Nadie pushea directo a main.
+- Cada issue o tarea tiene su propia rama.
+- Los Pull Requests deben tener descripcion breve.
+- Antes de pedir merge, correr:
+
+      pytest
+
+- Si modifican dependencias, avisar al grupo.
+- Si aparece un conflicto de Git, no improvisar: pedir ayuda.
+
+
+14. COMANDOS RAPIDOS
+--------------------
+
+Actualizar main:
+
+    git checkout main
+    git pull
+
+Crear rama:
+
+    git checkout -b feature/nombre
+
+Ver estado:
+
+    git status
+
+Guardar cambios:
+
+    git add .
+    git commit -m "tipo: descripcion"
+
+Subir rama:
+
+    git push -u origin feature/nombre
+
+Instalar proyecto:
+
+    py -m venv .venv
+    .\.venv\Scripts\Activate.ps1
+    python -m pip install -e ".[dev]"
+
+Ejecutar API:
+
+    uvicorn app.main:app --reload
+
+Ejecutar tests:
+
+    pytest
